@@ -1,12 +1,10 @@
 package com.ykmxxi.aligong.controller;
 
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class BaseController implements ErrorController {
+public class BaseController {
 
 	/**
 	 * 메인 페이지(root path) 를 돌려주는 메서드
@@ -18,8 +16,4 @@ public class BaseController implements ErrorController {
 		return "index";
 	}
 
-	@RequestMapping("/error")
-	public String error() {
-		return "error";
-	}
 }
