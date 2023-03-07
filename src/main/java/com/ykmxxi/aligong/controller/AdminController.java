@@ -23,8 +23,8 @@ public class AdminController {
 		return "admin/events";
 	}
 
-	@GetMapping("/places")
-	public String adminEventDetail(@PathVariable Integer evendId) {
+	@GetMapping("/events/{eventId}")
+	public String adminEventDetail(@PathVariable Integer eventId) {
 		return "admin/event-detail";
 	}
 
