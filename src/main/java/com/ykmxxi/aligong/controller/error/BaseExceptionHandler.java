@@ -1,4 +1,4 @@
-package com.ykmxxi.aligong.error;
+package com.ykmxxi.aligong.controller.error;
 
 import java.util.Map;
 

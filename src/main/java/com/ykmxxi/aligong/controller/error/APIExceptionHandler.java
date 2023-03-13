@@ -1,4 +1,6 @@
-package com.ykmxxi.aligong.error;
+package com.ykmxxi.aligong.controller.error;
+
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,14 @@ import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.dto.APIErrorResponse;
 import com.ykmxxi.aligong.exception.GeneralException;
 
-@RestControllerAdvice(annotations = RestController.class) // api 만 적용, view 에 영향 X
+@RestControllerAdvice(annotations = RestController.class)
 public class APIExceptionHandler extends ResponseEntityExceptionHandler {
+
+	@ExceptionHandler
+	public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
+		return handleExceptionInternal(e, ErrorCode.VALIDATION_ERROR, HttpHeaders.EMPTY, HttpStatus.BAD_REQUEST,
+			request);
+	}
 
 	@ExceptionHandler
 	public ResponseEntity<Object> general(GeneralException e, WebRequest request) {
@@ -23,27 +31,13 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpStatus.BAD_REQUEST :
 			HttpStatus.INTERNAL_SERVER_ERROR;
 
-		return super.handleExceptionInternal(
-			e,
-			APIErrorResponse.of(false, errorCode.getCode(), errorCode.getMessage(e)),
-			HttpHeaders.EMPTY,
-			status,
-			request
-		);
+		return handleExceptionInternal(e, errorCode, HttpHeaders.EMPTY, status, request);
 	}
 
 	@ExceptionHandler
 	public ResponseEntity<Object> exception(Exception e, WebRequest request) {
-		ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
-		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-		return super.handleExceptionInternal(
-			e,
-			APIErrorResponse.of(false, errorCode.getCode(), errorCode.getMessage(e)),
-			HttpHeaders.EMPTY,
-			status,
-			request
-		);
+		return handleExceptionInternal(e, ErrorCode.INTERNAL_ERROR, HttpHeaders.EMPTY, HttpStatus.INTERNAL_SERVER_ERROR,
+			request);
 	}
 
 	@Override
@@ -53,12 +47,18 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 			ErrorCode.SPRING_BAD_REQUEST :
 			ErrorCode.SPRING_INTERNAL_ERROR;
 
+		return handleExceptionInternal(ex, errorCode, headers, status, request);
+	}
+
+	private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorCode errorCode, HttpHeaders headers,
+		HttpStatus status, WebRequest request) {
 		return super.handleExceptionInternal(
-			ex,
-			APIErrorResponse.of(false, errorCode.getCode(), errorCode.getMessage(ex)),
+			e,
+			APIErrorResponse.of(false, errorCode.getCode(), errorCode.getMessage(e)),
 			headers,
 			status,
 			request
 		);
 	}
+
 }
