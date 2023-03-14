@@ -326,6 +326,7 @@ class EventServiceTest {
 		LocalDateTime eventEndDateTime
 	) {
 		return EventDto.of(
+			1L,
 			placeId,
 			eventName,
 			eventStatus,

@@ -107,6 +107,7 @@ class APIEventControllerTest {
 		// Given
 		EventResponse eventResponse = EventResponse.of(
 			1L,
+			1L,
 			"오후 운동",
 			EventStatus.OPENED,
 			LocalDateTime.of(2023, 3, 9, 13, 0, 0),
@@ -137,6 +138,7 @@ class APIEventControllerTest {
 	void givenWrongEvent_whenCreatingAnEvent_thenReturnsFailedStandardResponse() throws Exception {
 		// Given
 		EventResponse eventResponse = EventResponse.of(
+			1L,
 			-1L,
 			"       ",
 			null,
@@ -215,6 +217,7 @@ class APIEventControllerTest {
 		// Given
 		long eventId = 1L;
 		EventResponse eventResponse = EventResponse.of(
+			eventId,
 			1L,
 			"오후 운동",
 			EventStatus.OPENED,
@@ -247,6 +250,7 @@ class APIEventControllerTest {
 		// Given
 		long eventId = 0L;
 		EventResponse eventResponse = EventResponse.of(
+			eventId,
 			0L,
 			"  ",
 			null,
@@ -307,6 +311,7 @@ class APIEventControllerTest {
 
 	private EventDto createEventDTO() {
 		return EventDto.of(
+			1L,
 			1L,
 			"오후 운동",
 			EventStatus.OPENED,
