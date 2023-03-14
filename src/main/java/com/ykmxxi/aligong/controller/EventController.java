@@ -52,7 +52,7 @@ public class EventController {
 	public ModelAndView eventDetail(@PathVariable Long eventId) {
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("events", EventResponse.of(
+		map.put("event", EventResponse.of(
 			1L,
 			1L,
 			"오후 운동",

@@ -45,7 +45,7 @@ class EventControllerTest {
 			.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
 			.andExpect(view().name("event/detail"))
 			.andExpect(model().hasNoErrors())
-			.andExpect(model().attributeExists("events"));
+			.andExpect(model().attributeExists("event"));
 	}
 
 }

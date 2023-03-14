@@ -9,16 +9,15 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Configuration
 public class ThymeleafConfig {
 
-	private final Thymeleaf3Properties thymeleaf3Properties;
-
 	@Bean
 	public SpringResourceTemplateResolver thymeleafTemplateResolver(
-		SpringResourceTemplateResolver defaultTemplateResolver) {
-		defaultTemplateResolver.setUseDecoupledLogic(this.thymeleaf3Properties.isDecoupledLogic());
+		SpringResourceTemplateResolver defaultTemplateResolver,
+		Thymeleaf3Properties thymeleaf3Properties
+	) {
+		defaultTemplateResolver.setUseDecoupledLogic(thymeleaf3Properties.isDecoupledLogic());
 
 		return defaultTemplateResolver;
 	}
