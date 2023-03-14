@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.ykmxxi.aligong.constant.EventStatus;
 
 public record EventResponse(
+	Long id,
 	Long placeId,
 	String eventName,
 	EventStatus eventStatus,
@@ -15,6 +16,7 @@ public record EventResponse(
 	String memo
 ) {
 	public static EventResponse of(
+		Long id,
 		Long placeId,
 		String eventName,
 		EventStatus eventStatus,
@@ -25,6 +27,7 @@ public record EventResponse(
 		String memo
 	) {
 		return new EventResponse(
+			id,
 			placeId,
 			eventName,
 			eventStatus,
@@ -42,6 +45,7 @@ public record EventResponse(
 		}
 
 		return EventResponse.of(
+			eventDto.id(),
 			eventDto.placeId(),
 			eventDto.eventName(),
 			eventDto.eventStatus(),

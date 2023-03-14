@@ -71,6 +71,7 @@ public class AdminController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("event", EventDto.of(
 			1L,
+			1L,
 			"오후 운동",
 			EventStatus.OPENED,
 			LocalDateTime.of(2023, 3, 9, 13, 0, 0),
