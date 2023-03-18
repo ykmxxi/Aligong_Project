@@ -1,7 +1,6 @@
 package com.ykmxxi.aligong.exception;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.*;
 
 import java.util.stream.Stream;
@@ -15,10 +14,10 @@ import com.ykmxxi.aligong.constant.ErrorCode;
 
 class GeneralExceptionTest {
 
-	@DisplayName("")
 	@MethodSource
 	@ParameterizedTest(name = "[{index}] message({2}) => \"{1}\"")
-	void givenException_whenInstantiating_thenContainsRelevantInformation(Throwable input, String expectedMessage, ErrorCode expectedErrorCode) {
+	void givenException_whenInstantiating_thenContainsRelevantInformation(Throwable input, String expectedMessage,
+		ErrorCode expectedErrorCode) {
 		// Given
 
 		// When & Then
