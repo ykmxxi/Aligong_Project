@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.querydsl.core.types.Predicate;
 import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.constant.EventStatus;
-import com.ykmxxi.aligong.dto.EventDTO;
+import com.ykmxxi.aligong.dto.EventDto;
 import com.ykmxxi.aligong.exception.GeneralException;
 import com.ykmxxi.aligong.repository.EventRepository;
 
@@ -22,17 +22,17 @@ public class EventService {
 
 	private final EventRepository eventRepository;
 
-	public List<EventDTO> getEvents(Predicate predicate) {
+	public List<EventDto> getEvents(Predicate predicate) {
 		try {
 			return StreamSupport.stream(eventRepository.findAll(predicate).spliterator(), false)
-				.map(EventDTO::of)
+				.map(EventDto::of)
 				.toList();
 		} catch (Exception e) {
 			throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
 		}
 	}
 
-	public List<EventDTO> getEvents(
+	public List<EventDto> getEvents(
 		Long placeId,
 		String eventName,
 		EventStatus eventStatus,
@@ -46,15 +46,15 @@ public class EventService {
 		}
 	}
 
-	public Optional<EventDTO> getEvent(Long eventId) {
+	public Optional<EventDto> getEvent(Long eventId) {
 		try {
-			return eventRepository.findById(eventId).map(EventDTO::of);
+			return eventRepository.findById(eventId).map(EventDto::of);
 		} catch (Exception e) {
 			throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
 		}
 	}
 
-	public boolean createEvent(EventDTO eventDto) {
+	public boolean createEvent(EventDto eventDto) {
 		try {
 			if (eventDto == null) {
 				return false;
@@ -67,7 +67,7 @@ public class EventService {
 		}
 	}
 
-	public boolean modifyEvent(Long eventId, EventDTO dto) {
+	public boolean modifyEvent(Long eventId, EventDto dto) {
 		try {
 			if (eventId == null || dto == null) {
 				return false;

@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.ykmxxi.aligong.dto.EventDTO;
+import com.ykmxxi.aligong.dto.EventDto;
 import com.ykmxxi.aligong.service.EventService;
 
 @DisplayName("View 컨트롤러 - 이벤트")
@@ -53,7 +53,7 @@ class EventControllerTest {
 		// Given
 		long eventId = 1L;
 		given(eventService.getEvent(eventId)).willReturn(Optional.of(
-			EventDTO.of(eventId, null, null, null, null, null, null, null, null, null, null)
+			EventDto.of(eventId, null, null, null, null, null, null, null, null, null, null)
 		));
 
 		// When & Then
