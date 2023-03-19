@@ -1,49 +1,41 @@
 package com.ykmxxi.aligong.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ykmxxi.aligong.constant.EventStatus;
+import com.querydsl.core.types.Predicate;
+import com.ykmxxi.aligong.constant.ErrorCode;
+import com.ykmxxi.aligong.domain.Event;
 import com.ykmxxi.aligong.dto.EventResponse;
+import com.ykmxxi.aligong.exception.GeneralException;
+import com.ykmxxi.aligong.service.EventService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @RequestMapping("/events")
 @Controller
 public class EventController {
 
-	@GetMapping
-	public ModelAndView events() {
-		Map<String, Object> map = new HashMap<>();
+	private final EventService eventService;
 
-		map.put("events", List.of(EventResponse.of(
-			1L,
-				1L,
-				"오후 운동",
-				EventStatus.OPENED,
-				LocalDateTime.of(2023, 3, 14, 13, 0, 0),
-				LocalDateTime.of(2023, 3, 14, 16, 0, 0),
-				0,
-				50,
-				"마스크 착용 권장"
-			), EventResponse.of(
-				2L,
-				1L,
-				"오후 운동",
-				EventStatus.OPENED,
-				LocalDateTime.of(2023, 3, 14, 13, 0, 0),
-				LocalDateTime.of(2023, 3, 14, 16, 0, 0),
-				0,
-				50,
-				"마스크 착용 권장"
-			)
-		));
+	@GetMapping
+	public ModelAndView events(@QuerydslPredicate(root = Event.class) Predicate predicate) {
+		Map<String, Object> map = new HashMap<>();
+		List<EventResponse> events = eventService.getEvents(predicate)
+			.stream()
+			.map(EventResponse::from)
+			.toList();
+
+		map.put("events", events);
 
 		return new ModelAndView("event/index", map);
 	}
@@ -51,20 +43,13 @@ public class EventController {
 	@GetMapping("/{eventId}")
 	public ModelAndView eventDetail(@PathVariable Long eventId) {
 		Map<String, Object> map = new HashMap<>();
+		EventResponse event = eventService.getEvent(eventId)
+			.map(EventResponse::from)
+			.orElseThrow(() -> new GeneralException(ErrorCode.NOT_FOUND));
 
-		map.put("event", EventResponse.of(
-			1L,
-			1L,
-			"오후 운동",
-			EventStatus.OPENED,
-			LocalDateTime.of(2023, 3, 14, 13, 0, 0),
-			LocalDateTime.of(2023, 3, 14, 16, 0, 0),
-			0,
-			50,
-			"마스크 착용 권장"
-			)
-		);
+		map.put("event", event);
 
 		return new ModelAndView("event/detail", map);
 	}
+
 }

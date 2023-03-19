@@ -18,8 +18,8 @@ import com.ykmxxi.aligong.dto.APIDataResponse;
 import com.ykmxxi.aligong.dto.PlaceRequest;
 import com.ykmxxi.aligong.dto.PlaceResponse;
 
-@RequestMapping("/api")
-@RestController
+// @RequestMapping("/api")
+// @RestController
 public class APIPlaceController {
 
 	@GetMapping("/places")

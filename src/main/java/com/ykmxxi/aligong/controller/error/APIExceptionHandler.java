@@ -2,6 +2,7 @@ package com.ykmxxi.aligong.controller.error;
 
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.dto.APIErrorResponse;
 import com.ykmxxi.aligong.exception.GeneralException;
 
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice(annotations = {RestController.class, RepositoryRestController.class})
 public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler
