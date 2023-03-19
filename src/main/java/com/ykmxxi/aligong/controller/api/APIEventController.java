@@ -28,10 +28,10 @@ import com.ykmxxi.aligong.service.EventService;
 
 import lombok.RequiredArgsConstructor;
 
-@Validated
+// @Validated
 @RequiredArgsConstructor
-@RequestMapping("/api")
-@RestController
+// @RequestMapping("/api")
+// @RestController
 public class APIEventController {
 
 	private final EventService eventService;

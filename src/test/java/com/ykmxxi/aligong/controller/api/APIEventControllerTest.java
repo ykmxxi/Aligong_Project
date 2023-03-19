@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.ykmxxi.aligong.dto.EventDto;
 import com.ykmxxi.aligong.dto.EventResponse;
 import com.ykmxxi.aligong.service.EventService;
 
+@Disabled("API 컨트롤러 비활성화")
 @WebMvcTest(APIEventController.class)
 class APIEventControllerTest {
 

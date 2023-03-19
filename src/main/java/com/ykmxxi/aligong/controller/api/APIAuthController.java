@@ -9,8 +9,8 @@ import com.ykmxxi.aligong.dto.APIDataResponse;
 import com.ykmxxi.aligong.dto.AdminRequest;
 import com.ykmxxi.aligong.dto.LoginRequest;
 
-@RequestMapping("/api")
-@RestController
+// @RequestMapping("/api")
+// @RestController
 public class APIAuthController {
 
 	@PostMapping("/sign-up")

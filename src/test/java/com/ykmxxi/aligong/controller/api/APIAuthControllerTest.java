@@ -3,6 +3,7 @@ package com.ykmxxi.aligong.controller.api;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.dto.AdminRequest;
 import com.ykmxxi.aligong.dto.LoginRequest;
 
+@Disabled("API 컨트롤러 비활성화")
 @WebMvcTest(APIAuthController.class)
 class APIAuthControllerTest {
 

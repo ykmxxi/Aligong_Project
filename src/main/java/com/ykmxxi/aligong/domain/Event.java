@@ -1,7 +1,5 @@
 package com.ykmxxi.aligong.domain;
 
-import static javax.persistence.GenerationType.*;
-
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
