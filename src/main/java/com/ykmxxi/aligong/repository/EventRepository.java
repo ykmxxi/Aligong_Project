@@ -1,38 +1,27 @@
 package com.ykmxxi.aligong.repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
+import org.springframework.data.querydsl.binding.QuerydslBindings;
 
-import com.ykmxxi.aligong.constant.EventStatus;
-import com.ykmxxi.aligong.dto.EventDto;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.ykmxxi.aligong.domain.Event;
+import com.ykmxxi.aligong.domain.QEvent;
 
-public interface EventRepository {
+public interface EventRepository extends
+	JpaRepository<Event, Long>,
+	QuerydslPredicateExecutor<Event>,
+	QuerydslBinderCustomizer<QEvent> {
 
-	// TODO: 2023/03/12 repository layer 구현 완료 시 default 삭제
-	default List<EventDto> findEvents(
-		Long placeId,
-		String eventName,
-		EventStatus eventStatus,
-		LocalDateTime eventStartDatetime,
-		LocalDateTime eventEndDatetime
-	) {
-		return null;
-	}
-
-	default Optional<EventDto> findEvent(Long eventId) {
-		return Optional.empty();
-	}
-
-	default boolean insertEvent(EventDto eventDTO) {
-		return false;
-	}
-
-	default boolean updateEvent(Long eventId, EventDto dto) {
-		return false;
-	}
-
-	default boolean deleteEvent(Long eventId) {
-		return false;
+	@Override
+	default void customize(QuerydslBindings bindings, QEvent root) {
+		bindings.excludeUnlistedProperties(true);
+		bindings.including(root.placeId, root.eventName, root.eventStatus, root.eventStartDatetime,
+			root.eventEndDatetime);
+		bindings.bind(root.eventName).first(StringExpression::likeIgnoreCase);
+		bindings.bind(root.eventStartDatetime).first(ComparableExpression::goe);
+		bindings.bind(root.eventEndDatetime).first(ComparableExpression::loe);
 	}
 }
