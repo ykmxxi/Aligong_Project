@@ -14,329 +14,297 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.constant.EventStatus;
-import com.ykmxxi.aligong.dto.EventDto;
+import com.ykmxxi.aligong.domain.Event;
+import com.ykmxxi.aligong.dto.EventDTO;
 import com.ykmxxi.aligong.exception.GeneralException;
 import com.ykmxxi.aligong.repository.EventRepository;
 
+@DisplayName("비즈니스 로직 - 이벤트")
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
 
-	@InjectMocks
-	private EventService sut;
-	@Mock
-	private EventRepository eventRepository;
+	@InjectMocks private EventService sut;
+	@Mock private EventRepository eventRepository;
 
-	@DisplayName("검색 조건 없이 이벤트 검색 시 전체 이벤트 리스트를 출력")
+	@DisplayName("이벤트를 검색하면, 결과를 출력하여 보여준다.")
 	@Test
 	void givenNothing_whenSearchingEvents_thenReturnsEntireEventList() {
-		// given
-		given(eventRepository.findEvents(null, null, null, null, null))
+		// Given
+		given(eventRepository.findAll(any(Predicate.class)))
 			.willReturn(List.of(
-				createEventDTO(1L, "오전 운동", true),
-				createEventDTO(1L, "오후 운동", false)
+				createEvent(1L, "오전 운동", true),
+				createEvent(1L, "오후 운동", false)
 			));
 
-		// when
-		List<EventDto> list = sut.getEvents(null, null, null, null, null);
+		// When
+		List<EventDTO> list = sut.getEvents(new BooleanBuilder());
 
-		// then
+		// Then
 		assertThat(list).hasSize(2);
-		// verify(eventRepository).findEvents(null, null, null, null, null);
-		then(eventRepository).should().findEvents(null, null, null, null, null);
+		then(eventRepository).should().findAll(any(Predicate.class));
 	}
 
-	@DisplayName("검색 조건을 넣어 이벤트 검색 시 검색된 이벤트 결과를 출력")
+	@DisplayName("이벤트를 검색하는데 에러가 발생한 경우, 줄서기 프로젝트 기본 에러로 전환하여 예외 던진다.")
 	@Test
-	void givenSearchParams_whenSearchingEvents_thenReturnsEventList() {
-		// given
-		long placeId = 1L;
-		String eventName = "오전 운동";
-		EventStatus eventStatus = EventStatus.OPENED;
-		LocalDateTime eventStartDatetime = LocalDateTime.of(2023, 3, 9, 10, 0, 0);
-		LocalDateTime eventEndDatetime = LocalDateTime.of(2023, 3, 9, 11, 0, 0);
+	void givenDataRelatedException_whenSearchingEvents_thenThrowsGeneralException() {
+		// Given
+		RuntimeException e = new RuntimeException("This is test.");
+		given(eventRepository.findAll(any(Predicate.class))).willThrow(e);
 
-		given(eventRepository.findEvents(placeId, eventName, eventStatus, eventStartDatetime, eventEndDatetime))
-			.willReturn(List.of(
-				createEventDTO(1L, "오전 운동", eventStatus, eventStartDatetime, eventEndDatetime)
-			));
+		// When
+		Throwable thrown = catchThrowable(() -> sut.getEvents(new BooleanBuilder()));
 
-		// when
-		List<EventDto> list = sut.getEvents(placeId, eventName, eventStatus, eventStartDatetime, eventEndDatetime);
-
-		// then
-		assertThat(list)
-			.hasSize(1)
-			.allSatisfy(event -> {
-					assertThat(event)
-						.hasFieldOrPropertyWithValue("placeId", placeId)
-						.hasFieldOrPropertyWithValue("eventName", eventName)
-						.hasFieldOrPropertyWithValue("eventStatus", eventStatus);
-					assertThat(event.eventStartDatetime()).isAfterOrEqualTo(eventStartDatetime);
-					assertThat(event.eventStartDatetime()).isBeforeOrEqualTo(eventEndDatetime);
-				}
-			);
-
-		// verify(eventRepository).findEvents(placeId, eventName, eventStatus, eventStartDatetime, eventEndDatetime);
-		then(eventRepository).should()
-			.findEvents(placeId, eventName, eventStatus, eventStartDatetime, eventEndDatetime);
-	}
-
-	@DisplayName("이벤트 검색 시 에러가 발생하는 경우, general 에러로 전환하여 예외 던진다.")
-	@Test
-	void givenDataRelatedException_whenSearchingEvents_thenReturnsThrowsGeneralException() {
-		// given
-		Exception e = new RuntimeException("This is test message.");
-		given(eventRepository.findEvents(any(), any(), any(), any(), any()))
-			.willThrow(e);
-
-		// when
-		Throwable thrown = catchThrowable(() -> sut.getEvents(null, null, null, null, null));
-
-		// then
+		// Then
 		assertThat(thrown)
 			.isInstanceOf(GeneralException.class)
 			.hasMessageContaining(ErrorCode.DATA_ACCESS_ERROR.getMessage());
-		// verify(eventRepository).findEvents(null, null, null, null, null);
-		then(eventRepository).should().findEvents(any(), any(), any(), any(), any());
+		then(eventRepository).should().findAll(any(Predicate.class));
 	}
 
 	@DisplayName("이벤트 ID로 존재하는 이벤트를 조회하면, 해당 이벤트 정보를 출력하여 보여준다.")
 	@Test
 	void givenEventId_whenSearchingExistingEvent_thenReturnsEvent() {
-		// given
+		// Given
 		long eventId = 1L;
-		EventDto eventDTO = createEventDTO(1L, "오전 운동", true);
-		given(eventRepository.findEvent(eventId)).willReturn(Optional.of(eventDTO));
+		Event event = createEvent(1L, "오전 운동", true);
+		given(eventRepository.findById(eventId)).willReturn(Optional.of(event));
 
-		// when
-		Optional<EventDto> result = sut.getEvent(eventId);
+		// When
+		Optional<EventDTO> result = sut.getEvent(eventId);
 
-		// then
-		assertThat(result).hasValue(eventDTO);
-		then(eventRepository).should().findEvent(eventId);
+		// Then
+		assertThat(result).hasValue(EventDTO.of(event));
+		then(eventRepository).should().findById(eventId);
 	}
 
 	@DisplayName("이벤트 ID로 이벤트를 조회하면, 빈 정보를 출력하여 보여준다.")
 	@Test
 	void givenEventId_whenSearchingNonexistentEvent_thenReturnsEmptyOptional() {
-		// given
+		// Given
 		long eventId = 2L;
-		given(eventRepository.findEvent(eventId)).willReturn(Optional.empty());
+		given(eventRepository.findById(eventId)).willReturn(Optional.empty());
 
-		// when
-		Optional<EventDto> result = sut.getEvent(eventId);
+		// When
+		Optional<EventDTO> result = sut.getEvent(eventId);
 
-		// then
+		// Then
 		assertThat(result).isEmpty();
-		then(eventRepository).should().findEvent(eventId);
+		then(eventRepository).should().findById(eventId);
 	}
 
-	@DisplayName("이벤트 ID로 이벤트를 조회하는데 데이터 관련 에러가 발생한 경우, general 에러로 전환하여 예외 던진다.")
+	@DisplayName("이벤트 ID로 이벤트를 조회하는데 데이터 관련 에러가 발생한 경우, 줄서기 프로젝트 기본 에러로 전환하여 예외 던진다.")
 	@Test
 	void givenDataRelatedException_whenSearchingEvent_thenThrowsGeneralException() {
-		// given
+		// Given
 		RuntimeException e = new RuntimeException("This is test.");
-		given(eventRepository.findEvent(any())).willThrow(e);
+		given(eventRepository.findById(any())).willThrow(e);
 
-		// when
+		// When
 		Throwable thrown = catchThrowable(() -> sut.getEvent(null));
 
-		// then
+		// Then
 		assertThat(thrown)
 			.isInstanceOf(GeneralException.class)
 			.hasMessageContaining(ErrorCode.DATA_ACCESS_ERROR.getMessage());
-		then(eventRepository).should().findEvent(any());
+		then(eventRepository).should().findById(any());
 	}
 
 	@DisplayName("이벤트 정보를 주면, 이벤트를 생성하고 결과를 true 로 보여준다.")
 	@Test
 	void givenEvent_whenCreating_thenCreatesEventAndReturnsTrue() {
-		// given
-		EventDto dto = createEventDTO(1L, "오후 운동", false);
-		given(eventRepository.insertEvent(dto)).willReturn(true);
+		// Given
+		Event event = createEvent(1L, "오후 운동", false);
+		given(eventRepository.save(event)).willReturn(event);
 
-		// when
-		boolean result = sut.createEvent(dto);
+		// When
+		boolean result = sut.createEvent(EventDTO.of(event));
 
-		// then
+		// Then
 		assertThat(result).isTrue();
-		then(eventRepository).should().insertEvent(dto);
+		then(eventRepository).should().save(event);
 	}
 
 	@DisplayName("이벤트 정보를 주지 않으면, 생성 중단하고 결과를 false 로 보여준다.")
 	@Test
 	void givenNothing_whenCreating_thenAbortCreatingAndReturnsFalse() {
-		// given
-		given(eventRepository.insertEvent(null)).willReturn(false);
+		// Given
 
-		// when
+		// When
 		boolean result = sut.createEvent(null);
 
-		// then
+		// Then
 		assertThat(result).isFalse();
-		verify(eventRepository).insertEvent(null);
+		then(eventRepository).shouldHaveNoInteractions();
 	}
 
-	@DisplayName("이벤트 생성 중 데이터 예외가 발생하면, general 에러로 전환하여 예외 던진다.")
+	@DisplayName("이벤트 생성 중 데이터 예외가 발생하면, 줄서기 프로젝트 기본 에러로 전환하여 예외 던진다")
 	@Test
 	void givenDataRelatedException_whenCreating_thenThrowsGeneralException() {
-		// given
+		// Given
+		Event event = createEvent(0L, null, false);
 		RuntimeException e = new RuntimeException("This is test.");
-		given(eventRepository.insertEvent(any())).willThrow(e);
+		given(eventRepository.save(any())).willThrow(e);
 
-		// when
-		Throwable thrown = catchThrowable(() -> sut.createEvent(null));
+		// When
+		Throwable thrown = catchThrowable(() -> sut.createEvent(EventDTO.of(event)));
 
-		// then
+		// Then
 		assertThat(thrown)
 			.isInstanceOf(GeneralException.class)
 			.hasMessageContaining(ErrorCode.DATA_ACCESS_ERROR.getMessage());
-		then(eventRepository).should().insertEvent(any());
+		then(eventRepository).should().save(any());
 	}
 
 	@DisplayName("이벤트 ID와 정보를 주면, 이벤트 정보를 변경하고 결과를 true 로 보여준다.")
 	@Test
 	void givenEventIdAndItsInfo_whenModifying_thenModifiesEventAndReturnsTrue() {
-		// given
+		// Given
 		long eventId = 1L;
-		EventDto dto = createEventDTO(1L, "오후 운동", false);
-		given(eventRepository.updateEvent(eventId, dto)).willReturn(true);
+		Event originalEvent = createEvent(1L, "오후 운동", false);
+		Event changedEvent = createEvent(1L, "오전 운동", true);
+		given(eventRepository.findById(eventId)).willReturn(Optional.of(originalEvent));
+		given(eventRepository.save(changedEvent)).willReturn(changedEvent);
 
-		// when
-		boolean result = sut.modifyEvent(eventId, dto);
+		// When
+		boolean result = sut.modifyEvent(eventId, EventDTO.of(changedEvent));
 
-		// then
+		// Then
 		assertThat(result).isTrue();
-		then(eventRepository).should().updateEvent(eventId, dto);
+		then(eventRepository).should().findById(eventId);
+		then(eventRepository).should().save(changedEvent);
 	}
 
 	@DisplayName("이벤트 ID를 주지 않으면, 이벤트 정보 변경 중단하고 결과를 false 로 보여준다.")
 	@Test
 	void givenNoEventId_whenModifying_thenAbortModifyingAndReturnsFalse() {
-		// given
-		EventDto dto = createEventDTO(1L, "오후 운동", false);
-		given(eventRepository.updateEvent(null, dto)).willReturn(false);
+		// Given
+		Event event = createEvent(1L, "오후 운동", false);
 
-		// when
-		boolean result = sut.modifyEvent(null, dto);
+		// When
+		boolean result = sut.modifyEvent(null, EventDTO.of(event));
 
-		// then
+		// Then
 		assertThat(result).isFalse();
-		then(eventRepository).should().updateEvent(null, dto);
+		then(eventRepository).shouldHaveNoInteractions();
 	}
 
 	@DisplayName("이벤트 ID만 주고 변경할 정보를 주지 않으면, 이벤트 정보 변경 중단하고 결과를 false 로 보여준다.")
 	@Test
 	void givenEventIdOnly_whenModifying_thenAbortModifyingAndReturnsFalse() {
-		// given
+		// Given
 		long eventId = 1L;
-		given(eventRepository.updateEvent(eventId, null)).willReturn(false);
 
-		// when
+		// When
 		boolean result = sut.modifyEvent(eventId, null);
 
-		// then
+		// Then
 		assertThat(result).isFalse();
-		then(eventRepository).should().updateEvent(eventId, null);
+		then(eventRepository).shouldHaveNoInteractions();
 	}
 
-	@DisplayName("이벤트 변경 중 데이터 오류가 발생하면, general 에러로 전환하여 예외 던진다.")
+	@DisplayName("이벤트 변경 중 데이터 오류가 발생하면, 줄서기 프로젝트 기본 에러로 전환하여 예외 던진다.")
 	@Test
 	void givenDataRelatedException_whenModifying_thenThrowsGeneralException() {
-		// given
+		// Given
+		long eventId = 1L;
+		Event originalEvent = createEvent(1L, "오후 운동", false);
+		Event wrongEvent = createEvent(0L, null, false);
 		RuntimeException e = new RuntimeException("This is test.");
-		given(eventRepository.updateEvent(any(), any())).willThrow(e);
+		given(eventRepository.findById(eventId)).willReturn(Optional.of(originalEvent));
+		given(eventRepository.save(any())).willThrow(e);
 
-		// when
-		Throwable thrown = catchThrowable(() -> sut.modifyEvent(null, null));
+		// When
+		Throwable thrown = catchThrowable(() -> sut.modifyEvent(eventId, EventDTO.of(wrongEvent)));
 
-		// then
+		// Then
 		assertThat(thrown)
 			.isInstanceOf(GeneralException.class)
 			.hasMessageContaining(ErrorCode.DATA_ACCESS_ERROR.getMessage());
-		then(eventRepository).should().updateEvent(any(), any());
+		then(eventRepository).should().findById(eventId);
+		then(eventRepository).should().save(any());
 	}
 
 	@DisplayName("이벤트 ID를 주면, 이벤트 정보를 삭제하고 결과를 true 로 보여준다.")
 	@Test
 	void givenEventId_whenDeleting_thenDeletesEventAndReturnsTrue() {
-		// given
+		// Given
 		long eventId = 1L;
-		given(eventRepository.deleteEvent(eventId)).willReturn(true);
+		willDoNothing().given(eventRepository).deleteById(eventId);
 
-		// when
+		// When
 		boolean result = sut.removeEvent(eventId);
 
-		// then
+		// Then
 		assertThat(result).isTrue();
-		then(eventRepository).should().deleteEvent(eventId);
+		then(eventRepository).should().deleteById(eventId);
 	}
 
 	@DisplayName("이벤트 ID를 주지 않으면, 삭제 중단하고 결과를 false 로 보여준다.")
 	@Test
 	void givenNothing_whenDeleting_thenAbortsDeletingAndReturnsFalse() {
-		// given
-		given(eventRepository.deleteEvent(null)).willReturn(false);
+		// Given
 
-		// when
+		// When
 		boolean result = sut.removeEvent(null);
 
-		// then
+		// Then
 		assertThat(result).isFalse();
-		then(eventRepository).should().deleteEvent(null);
+		then(eventRepository).shouldHaveNoInteractions();
 	}
 
-	@DisplayName("이벤트 삭제 중 데이터 오류가 발생하면, general 에러로 전환하여 예외 던진다.")
+	@DisplayName("이벤트 삭제 중 데이터 오류가 발생하면, 줄서기 프로젝트 기본 에러로 전환하여 예외 던진다.")
 	@Test
 	void givenDataRelatedException_whenDeleting_thenThrowsGeneralException() {
-		// given
+		// Given
+		long eventId = 0L;
 		RuntimeException e = new RuntimeException("This is test.");
-		given(eventRepository.deleteEvent(any())).willThrow(e);
+		willThrow(e).given(eventRepository).deleteById(eventId);
 
-		// when
-		Throwable thrown = catchThrowable(() -> sut.removeEvent(null));
+		// When
+		Throwable thrown = catchThrowable(() -> sut.removeEvent(eventId));
 
-		// then
+		// Then
 		assertThat(thrown)
 			.isInstanceOf(GeneralException.class)
 			.hasMessageContaining(ErrorCode.DATA_ACCESS_ERROR.getMessage());
-		then(eventRepository).should().deleteEvent(any());
+		then(eventRepository).should().deleteById(eventId);
 	}
 
-	private EventDto createEventDTO(long placeId, String eventName, boolean isMorning) {
+
+	private Event createEvent(long placeId, String eventName, boolean isMorning) {
 		String hourStart = isMorning ? "09" : "13";
 		String hourEnd = isMorning ? "12" : "16";
 
-		return createEventDTO(
+		return createEvent(
 			placeId,
 			eventName,
 			EventStatus.OPENED,
-			LocalDateTime.parse("2023-03-09T%s:00:00".formatted(hourStart)),
-			LocalDateTime.parse("2023-03-09T%s:00:00".formatted(hourEnd))
+			LocalDateTime.parse("2021-01-01T%s:00:00".formatted(hourStart)),
+			LocalDateTime.parse("2021-01-01T%s:00:00".formatted(hourEnd))
 		);
 	}
 
-	private EventDto createEventDTO(
+	private Event createEvent(
 		long placeId,
 		String eventName,
 		EventStatus eventStatus,
 		LocalDateTime eventStartDateTime,
 		LocalDateTime eventEndDateTime
 	) {
-		return EventDto.of(
-			1L,
+		return Event.of(
 			placeId,
 			eventName,
 			eventStatus,
 			eventStartDateTime,
 			eventEndDateTime,
 			0,
-			50,
-			"마스크 착용 권장",
-			LocalDateTime.now(),
-			LocalDateTime.now()
+			24,
+			"마스크 꼭 착용하세요"
 		);
 	}
+
 }

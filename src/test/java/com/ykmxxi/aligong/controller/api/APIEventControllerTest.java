@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.constant.EventStatus;
-import com.ykmxxi.aligong.dto.EventDto;
+import com.ykmxxi.aligong.dto.EventDTO;
 import com.ykmxxi.aligong.dto.EventResponse;
 import com.ykmxxi.aligong.service.EventService;
 
@@ -311,8 +311,8 @@ class APIEventControllerTest {
 		then(eventService).shouldHaveNoInteractions();
 	}
 
-	private EventDto createEventDTO() {
-		return EventDto.of(
+	private EventDTO createEventDTO() {
+		return EventDTO.of(
 			1L,
 			1L,
 			"오후 운동",

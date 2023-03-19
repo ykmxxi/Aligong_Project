@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.ykmxxi.aligong.constant.PlaceType;
 
-public record PlaceDto(
+public record PlaceDTO(
 	PlaceType placeType,
 	String placeName,
 	String address,
@@ -14,7 +14,7 @@ public record PlaceDto(
 	LocalDateTime createdAt,
 	LocalDateTime modifiedAt
 ) {
-	public static PlaceDto of(
+	public static PlaceDTO of(
 		PlaceType placeType,
 		String placeName,
 		String address,
@@ -24,7 +24,7 @@ public record PlaceDto(
 		LocalDateTime createdAt,
 		LocalDateTime modifiedAt
 	) {
-		return new PlaceDto(
+		return new PlaceDTO(
 			placeType,
 			placeName,
 			address,

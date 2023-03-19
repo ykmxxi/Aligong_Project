@@ -13,8 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ykmxxi.aligong.constant.EventStatus;
 import com.ykmxxi.aligong.constant.PlaceType;
-import com.ykmxxi.aligong.dto.EventDto;
-import com.ykmxxi.aligong.dto.PlaceDto;
+import com.ykmxxi.aligong.dto.EventDTO;
+import com.ykmxxi.aligong.dto.PlaceDTO;
 
 @RequestMapping("/admin")
 @Controller
@@ -35,7 +35,7 @@ public class AdminController {
 	@GetMapping("/places/{placeId}")
 	public ModelAndView adminPlaceDetail(@PathVariable Long placeId) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("place", PlaceDto.of(
+		map.put("place", PlaceDTO.of(
 			PlaceType.SPORTS,
 			"치평테니스코트",
 			"광주광역시 서구 시청로 11",
@@ -69,7 +69,7 @@ public class AdminController {
 	@GetMapping("/events/{eventId}")
 	public ModelAndView adminEventDetail(@PathVariable Long eventId) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("event", EventDto.of(
+		map.put("event", EventDTO.of(
 			1L,
 			1L,
 			"오후 운동",

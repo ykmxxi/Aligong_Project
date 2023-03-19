@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import com.ykmxxi.aligong.constant.EventStatus;
 import com.ykmxxi.aligong.domain.Event;
 
-public record EventDto(
+public record EventDTO(
 	Long id,
 	Long placeId,
 	String eventName,
@@ -18,7 +18,7 @@ public record EventDto(
 	LocalDateTime createdAt,
 	LocalDateTime modifiedAt
 ) {
-	public static EventDto of(
+	public static EventDTO of(
 		Long id,
 		Long placeId,
 		String eventName,
@@ -31,7 +31,7 @@ public record EventDto(
 		LocalDateTime createdAt,
 		LocalDateTime modifiedAt
 	) {
-		return new EventDto(
+		return new EventDTO(
 			id,
 			placeId,
 			eventName,
@@ -46,8 +46,8 @@ public record EventDto(
 		);
 	}
 
-	public static EventDto of(Event event) {
-		return new EventDto(
+	public static EventDTO of(Event event) {
+		return new EventDTO(
 			event.getId(),
 			event.getPlaceId(),
 			event.getEventName(),
