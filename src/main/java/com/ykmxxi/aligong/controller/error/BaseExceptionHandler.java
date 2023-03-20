@@ -12,38 +12,34 @@ import com.ykmxxi.aligong.exception.GeneralException;
 
 @ControllerAdvice
 public class BaseExceptionHandler {
-
 	@ExceptionHandler
-	public ModelAndView general(GeneralException e) { // 커스텀 예외
+	public ModelAndView general(GeneralException e) {
 		ErrorCode errorCode = e.getErrorCode();
-		HttpStatus status = errorCode.isClientSideError() ?
-			HttpStatus.BAD_REQUEST :
-			HttpStatus.INTERNAL_SERVER_ERROR;
 
 		return new ModelAndView(
 			"error",
 			Map.of(
-				"statusCode", status.value(),
+				"statusCode", errorCode.getHttpStatus().value(),
 				"errorCode", errorCode,
 				"message", errorCode.getMessage()
 			),
-			status
+			errorCode.getHttpStatus()
 		);
 	}
 
 	@ExceptionHandler
-	public ModelAndView exception(Exception e) { // 일반 예외
+	public ModelAndView exception(Exception e) {
 		ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
-		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
 		return new ModelAndView(
 			"error",
 			Map.of(
-				"statusCode", status.value(),
+				"statusCode", errorCode.getHttpStatus().value(),
 				"errorCode", errorCode,
 				"message", errorCode.getMessage(e)
 			),
-			status
+			errorCode.getHttpStatus()
 		);
 	}
+
 }
