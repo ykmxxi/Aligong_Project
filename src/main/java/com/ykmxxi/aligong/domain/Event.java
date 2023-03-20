@@ -85,6 +85,7 @@ public class Event {
 	@CreatedDate
 	private LocalDateTime createdAt;
 
+	// 실무에서는 @Column(nullable = false) 만 작성함(가볍게 설계)
 	@Column(nullable = false, insertable = false, updatable = false,
 		columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
 	@LastModifiedDate
