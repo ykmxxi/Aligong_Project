@@ -9,18 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.ykmxxi.aligong.constant.PlaceType;
 import com.ykmxxi.aligong.dto.APIDataResponse;
 import com.ykmxxi.aligong.dto.PlaceRequest;
 import com.ykmxxi.aligong.dto.PlaceResponse;
 
+@Deprecated
 // @RequestMapping("/api")
 // @RestController
-public class APIPlaceController {
+public class ApiPlaceController {
 
 	@GetMapping("/places")
 	public APIDataResponse<List<PlaceResponse>> getPlaces() {

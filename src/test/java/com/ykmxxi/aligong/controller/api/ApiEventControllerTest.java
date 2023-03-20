@@ -27,9 +27,10 @@ import com.ykmxxi.aligong.dto.EventDto;
 import com.ykmxxi.aligong.dto.EventResponse;
 import com.ykmxxi.aligong.service.EventService;
 
+@Deprecated
 @Disabled("API 컨트롤러 비활성화")
-@WebMvcTest(APIEventController.class)
-class APIEventControllerTest {
+@WebMvcTest(ApiEventController.class)
+class ApiEventControllerTest {
 
 	private final MockMvc mvc;
 	private final ObjectMapper mapper;
@@ -37,7 +38,7 @@ class APIEventControllerTest {
 	@MockBean
 	private EventService eventService;
 
-	public APIEventControllerTest(
+	public ApiEventControllerTest(
 		@Autowired MockMvc mvc,
 		@Autowired ObjectMapper mapper
 	) {

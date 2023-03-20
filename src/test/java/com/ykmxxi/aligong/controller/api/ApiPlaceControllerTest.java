@@ -16,14 +16,15 @@ import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.constant.PlaceType;
 import com.ykmxxi.aligong.dto.PlaceRequest;
 
+@Deprecated
 @Disabled("API 컨트롤러 비활성화")
-@WebMvcTest(APIPlaceController.class)
-class APIPlaceControllerTest {
+@WebMvcTest(ApiPlaceController.class)
+class ApiPlaceControllerTest {
 
 	private final MockMvc mvc;
 	private final ObjectMapper mapper;
 
-	public APIPlaceControllerTest(
+	public ApiPlaceControllerTest(
 		@Autowired MockMvc mvc,
 		@Autowired ObjectMapper mapper
 	) {

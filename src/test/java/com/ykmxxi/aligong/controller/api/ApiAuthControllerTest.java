@@ -16,14 +16,15 @@ import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.dto.AdminRequest;
 import com.ykmxxi.aligong.dto.LoginRequest;
 
+@Deprecated
 @Disabled("API 컨트롤러 비활성화")
-@WebMvcTest(APIAuthController.class)
-class APIAuthControllerTest {
+@WebMvcTest(ApiAuthController.class)
+class ApiAuthControllerTest {
 
 	private final MockMvc mvc;
 	private final ObjectMapper mapper;
 
-	public APIAuthControllerTest(
+	public ApiAuthControllerTest(
 		@Autowired MockMvc mvc,
 		@Autowired ObjectMapper mapper
 	) {
