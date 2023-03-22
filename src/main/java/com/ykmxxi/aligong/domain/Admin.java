@@ -58,7 +58,7 @@ public class Admin {
 	@Setter
 	private String memo;
 
-	@ToString.Exclude
+	@ToString.Exclude // 순환참조 예방, OneToMany
 	@OrderBy("id")
 	@OneToMany(mappedBy = "admin")
 	private final Set<AdminPlaceMap> adminPlaceMaps = new LinkedHashSet<>();
