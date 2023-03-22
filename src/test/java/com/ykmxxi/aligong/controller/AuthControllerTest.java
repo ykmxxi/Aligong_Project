@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+@DisplayName("View 컨트롤러 - 인증")
 @WebMvcTest(AuthController.class)
 class AuthControllerTest {
 
@@ -29,7 +30,7 @@ class AuthControllerTest {
 		mvc.perform(get("/login"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-			.andExpect(content().string(containsString("This is temporary login page...")))
+			.andExpect(content().string(containsString("This is login page.")))
 			.andExpect(view().name("auth/login"));
 	}
 
@@ -42,7 +43,7 @@ class AuthControllerTest {
 		mvc.perform(get("/sign-up"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-			.andExpect(content().string(containsString("This is temporary sign-up page...")))
+			.andExpect(content().string(containsString("This is sign-up page.")))
 			.andExpect(view().name("auth/sign-up"));
 	}
 

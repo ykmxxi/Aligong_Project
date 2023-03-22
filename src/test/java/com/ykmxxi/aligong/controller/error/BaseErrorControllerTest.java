@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.ykmxxi.aligong.controller.error.BaseErrorController;
-
+@DisplayName("View 컨트롤러 - 에러")
 @WebMvcTest(BaseErrorController.class)
 class BaseErrorControllerTest {
 
@@ -21,13 +20,13 @@ class BaseErrorControllerTest {
 		this.mvc = mvc;
 	}
 
-	@DisplayName("[view][GET] 에러 페이지")
+	@DisplayName("[view][GET] 에러 페이지 - 페이지 없음")
 	@Test
 	void givenWrongURI_whenRequestingPage_thenReturns404ErrorPage() throws Exception {
-		// given
+		// Given
 
-		// when & then
-		mvc.perform(get("/wrong-url"))
+		// When & Then
+		mvc.perform(get("/wrong-uri"))
 			.andExpect(status().isNotFound())
 			.andDo(print());
 	}

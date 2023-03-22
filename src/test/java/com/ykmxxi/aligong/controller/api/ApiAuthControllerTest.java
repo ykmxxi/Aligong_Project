@@ -17,7 +17,8 @@ import com.ykmxxi.aligong.dto.AdminRequest;
 import com.ykmxxi.aligong.dto.LoginRequest;
 
 @Deprecated
-@Disabled("API 컨트롤러 비활성화")
+@Disabled("API 컨트롤러가 필요없는 상황이어서 비활성화")
+@DisplayName("API 컨트롤러 - 인증")
 @WebMvcTest(ApiAuthController.class)
 class ApiAuthControllerTest {
 

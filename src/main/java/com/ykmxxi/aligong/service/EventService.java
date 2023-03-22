@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.querydsl.core.types.Predicate;
 import com.ykmxxi.aligong.constant.ErrorCode;
 import com.ykmxxi.aligong.constant.EventStatus;
+import com.ykmxxi.aligong.domain.Place;
 import com.ykmxxi.aligong.dto.EventDto;
 import com.ykmxxi.aligong.exception.GeneralException;
 import com.ykmxxi.aligong.repository.EventRepository;
+import com.ykmxxi.aligong.repository.PlaceRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class EventService {
 
 	private final EventRepository eventRepository;
+	private final PlaceRepository placeRepository;
 
 	public List<EventDto> getEvents(Predicate predicate) {
 		try {
@@ -54,13 +57,15 @@ public class EventService {
 		}
 	}
 
-	public boolean createEvent(EventDto eventDto) {
+	public boolean createEvent(EventDto eventDTO) {
 		try {
-			if (eventDto == null) {
+			if (eventDTO == null) {
 				return false;
 			}
 
-			eventRepository.save(eventDto.toEntity());
+			Place place = placeRepository.findById(eventDTO.placeDto().id())
+				.orElseThrow(() -> new GeneralException(ErrorCode.NOT_FOUND));
+			eventRepository.save(eventDTO.toEntity(place));
 			return true;
 		} catch (Exception e) {
 			throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

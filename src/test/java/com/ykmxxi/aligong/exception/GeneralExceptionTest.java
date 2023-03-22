@@ -1,6 +1,6 @@
 package com.ykmxxi.aligong.exception;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.*;
 
 import java.util.stream.Stream;
@@ -12,8 +12,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.ykmxxi.aligong.constant.ErrorCode;
 
+@DisplayName("에러 처리 - 기본 예외")
 class GeneralExceptionTest {
 
+	@DisplayName("예외 생성 시 기본 메시지, 에러 코드")
 	@MethodSource
 	@ParameterizedTest(name = "[{index}] message({2}) => \"{1}\"")
 	void givenException_whenInstantiating_thenContainsRelevantInformation(Throwable input, String expectedMessage,

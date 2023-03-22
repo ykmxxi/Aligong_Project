@@ -6,7 +6,7 @@ import com.ykmxxi.aligong.constant.EventStatus;
 
 public record EventResponse(
 	Long id,
-	Long placeId,
+	PlaceDto place,
 	String eventName,
 	EventStatus eventStatus,
 	LocalDateTime eventStartDatetime,
@@ -15,9 +15,10 @@ public record EventResponse(
 	Integer capacity,
 	String memo
 ) {
+
 	public static EventResponse of(
 		Long id,
-		Long placeId,
+		PlaceDto place,
 		String eventName,
 		EventStatus eventStatus,
 		LocalDateTime eventStartDatetime,
@@ -28,7 +29,7 @@ public record EventResponse(
 	) {
 		return new EventResponse(
 			id,
-			placeId,
+			place,
 			eventName,
 			eventStatus,
 			eventStartDatetime,
@@ -39,21 +40,21 @@ public record EventResponse(
 		);
 	}
 
-	public static EventResponse from(EventDto eventDto) {
-		if (eventDto == null) {
+	public static EventResponse from(EventDto eventDTO) {
+		if (eventDTO == null) {
 			return null;
 		}
-
 		return EventResponse.of(
-			eventDto.id(),
-			eventDto.placeId(),
-			eventDto.eventName(),
-			eventDto.eventStatus(),
-			eventDto.eventStartDatetime(),
-			eventDto.eventEndDatetime(),
-			eventDto.currentNumberOfPeople(),
-			eventDto.capacity(),
-			eventDto.memo()
+			eventDTO.id(),
+			eventDTO.placeDto(),
+			eventDTO.eventName(),
+			eventDTO.eventStatus(),
+			eventDTO.eventStartDatetime(),
+			eventDTO.eventEndDatetime(),
+			eventDTO.currentNumberOfPeople(),
+			eventDTO.capacity(),
+			eventDTO.memo()
 		);
 	}
+
 }

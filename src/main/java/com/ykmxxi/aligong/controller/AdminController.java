@@ -19,6 +19,7 @@ import com.ykmxxi.aligong.dto.PlaceDto;
 @RequestMapping("/admin")
 @Controller
 public class AdminController {
+
 	@GetMapping("/places")
 	public ModelAndView adminPlaces(
 		PlaceType placeType,
@@ -29,6 +30,7 @@ public class AdminController {
 		map.put("placeType", placeType);
 		map.put("placeName", placeName);
 		map.put("address", address);
+
 		return new ModelAndView("admin/places", map);
 	}
 
@@ -36,12 +38,13 @@ public class AdminController {
 	public ModelAndView adminPlaceDetail(@PathVariable Long placeId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("place", PlaceDto.of(
-			PlaceType.SPORTS,
-			"치평테니스코트",
-			"광주광역시 서구 시청로 11",
-			"010-1234-4321",
-			50,
-			"새시설",
+			placeId,
+			PlaceType.COMMON,
+			"랄라배드민턴장",
+			"서울시 강남구 강남대로 1234",
+			"010-1234-5678",
+			30,
+			"신장개업",
 			LocalDateTime.now(),
 			LocalDateTime.now()
 		));
@@ -63,6 +66,7 @@ public class AdminController {
 		map.put("eventStatus", eventStatus);
 		map.put("eventStartDatetime", eventStartDatetime);
 		map.put("eventEndDatetime", eventEndDatetime);
+
 		return new ModelAndView("admin/events", map);
 	}
 
@@ -70,15 +74,25 @@ public class AdminController {
 	public ModelAndView adminEventDetail(@PathVariable Long eventId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("event", EventDto.of(
-			1L,
-			1L,
+			eventId,
+			PlaceDto.of(
+				1L,
+				PlaceType.SPORTS,
+				"배드민턴장",
+				"서울시 그리구 그래동",
+				"010-2222-3333",
+				33,
+				null,
+				LocalDateTime.now(),
+				LocalDateTime.now()
+			),
 			"오후 운동",
 			EventStatus.OPENED,
-			LocalDateTime.of(2023, 3, 9, 13, 0, 0),
-			LocalDateTime.of(2023, 3, 9, 16, 0, 0),
+			LocalDateTime.of(2021, 1, 1, 13, 0, 0),
+			LocalDateTime.of(2021, 1, 1, 16, 0, 0),
 			0,
-			50,
-			"마스크 착용 권장",
+			24,
+			"마스크 꼭 착용하세요",
 			LocalDateTime.now(),
 			LocalDateTime.now()
 		));

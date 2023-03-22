@@ -10,7 +10,6 @@ import javax.validation.constraints.PositiveOrZero;
 import com.ykmxxi.aligong.constant.EventStatus;
 
 public record EventRequest(
-	@NotNull @Positive Long id,
 	@NotNull @Positive Long placeId,
 	@NotBlank String eventName,
 	@NotNull EventStatus eventStatus,
@@ -20,8 +19,8 @@ public record EventRequest(
 	@NotNull @Positive Integer capacity,
 	String memo
 ) {
+
 	public static EventRequest of(
-		Long id,
 		Long placeId,
 		String eventName,
 		EventStatus eventStatus,
@@ -32,7 +31,6 @@ public record EventRequest(
 		String memo
 	) {
 		return new EventRequest(
-			id,
 			placeId,
 			eventName,
 			eventStatus,
@@ -44,10 +42,10 @@ public record EventRequest(
 		);
 	}
 
-	public EventDto toDto() {
+	public EventDto toDTO() {
 		return EventDto.of(
-			this.id(),
-			this.placeId(),
+			null,
+			null, // TODO: 여기를 반드시 적절히 고쳐야 사용할 수 있음
 			this.eventName(),
 			this.eventStatus(),
 			this.eventStartDatetime(),
@@ -59,4 +57,5 @@ public record EventRequest(
 			null
 		);
 	}
+
 }

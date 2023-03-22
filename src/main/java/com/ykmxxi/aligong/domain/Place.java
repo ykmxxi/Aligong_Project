@@ -1,6 +1,9 @@
 package com.ykmxxi.aligong.domain;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -19,14 +24,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.ykmxxi.aligong.constant.PlaceType;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
-@EqualsAndHashCode
 @Table(indexes = {
 	@Index(columnList = "placeName"),
 	@Index(columnList = "address"),
@@ -76,6 +79,16 @@ public class Place {
 	@LastModifiedDate
 	private LocalDateTime modifiedAt;
 
+	@ToString.Exclude
+	@OrderBy("id")
+	@OneToMany(mappedBy = "place")
+	private final Set<Event> events = new LinkedHashSet<>();
+
+	@ToString.Exclude
+	@OrderBy("id")
+	@OneToMany(mappedBy = "place")
+	private final Set<AdminPlaceMap> adminPlaceMaps = new LinkedHashSet<>();
+
 	protected Place() {
 	}
 
@@ -105,4 +118,19 @@ public class Place {
 	) {
 		return new Place(placeType, placeName, address, phoneNumber, capacity, memo);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		return id != null && id.equals(((Place)obj).getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(placeName, address, phoneNumber, createdAt, modifiedAt);
+	}
+
 }

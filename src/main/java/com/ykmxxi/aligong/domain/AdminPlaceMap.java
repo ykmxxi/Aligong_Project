@@ -1,6 +1,7 @@
 package com.ykmxxi.aligong.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,25 +10,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import net.minidev.json.annotate.JsonIgnore;
-
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
-@EqualsAndHashCode
 @Table(indexes = {
-	@Index(columnList = "adminId"),
-	@Index(columnList = "placeId"),
 	@Index(columnList = "createdAt"),
 	@Index(columnList = "modifiedAt")
 })
@@ -35,22 +31,23 @@ import lombok.ToString;
 @Entity
 public class AdminPlaceMap {
 
-	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Setter
-	@Column(nullable = false)
-	private Long adminId;
+	@ManyToOne(optional = false)
+	private Admin admin;
+
 	@Setter
-	@Column(nullable = false)
-	private Long placeId;
+	@ManyToOne(optional = false)
+	private Place place;
 
 	@Column(nullable = false, insertable = false, updatable = false,
 		columnDefinition = "datetime default CURRENT_TIMESTAMP")
 	@CreatedDate
 	private LocalDateTime createdAt;
+
 	@Column(nullable = false, insertable = false, updatable = false,
 		columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
 	@LastModifiedDate
@@ -59,12 +56,27 @@ public class AdminPlaceMap {
 	protected AdminPlaceMap() {
 	}
 
-	protected AdminPlaceMap(Long adminId, Long placeId) {
-		this.adminId = adminId;
-		this.placeId = placeId;
+	protected AdminPlaceMap(Admin admin, Place place) {
+		this.admin = admin;
+		this.place = place;
 	}
 
-	public static AdminPlaceMap of(Long adminId, Long placeId) {
-		return new AdminPlaceMap(adminId, placeId);
+	public static AdminPlaceMap of(Admin admin, Place place) {
+		return new AdminPlaceMap(admin, place);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		return id != null && id.equals(((AdminPlaceMap)obj).getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(place, admin, createdAt, modifiedAt);
+	}
+
 }
