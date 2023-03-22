@@ -1,21 +1,29 @@
 package com.ykmxxi.aligong.controller.api;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ykmxxi.aligong.constant.EventStatus;
 import com.ykmxxi.aligong.dto.ApiDataResponse;
 import com.ykmxxi.aligong.dto.EventRequest;
 import com.ykmxxi.aligong.dto.EventResponse;
 import com.ykmxxi.aligong.service.EventService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Spring Data REST 로 API 를 만들어서 당장 필요가 없어진 컨트롤러.
