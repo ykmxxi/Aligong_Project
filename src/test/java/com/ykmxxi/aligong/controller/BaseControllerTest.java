@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+@DisplayName("View 컨트롤러 - 기본 페이지")
 @WebMvcTest(BaseController.class)
 class BaseControllerTest {
 
@@ -23,15 +24,16 @@ class BaseControllerTest {
 
 	@DisplayName("[view][GET] 기본 페이지 요청")
 	@Test
-	void testRoot() throws Exception {
-		// given
+	void givenNothing_whenRequestingRootPage_thenReturnsIndexPage() throws Exception {
+		// Given
 
-		// when & then
+		// When & Then
 		mvc.perform(get("/"))
 			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML)) // contentTypeCompatibleWith(""): TEXT_HTML 이 포함되어 있으면 됨
-			.andExpect(content().string(containsString("This is temporary root page...")))
+			.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+			.andExpect(content().string(containsString("This is default page.")))
 			.andExpect(view().name("index"))
 			.andDo(print());
 	}
+
 }

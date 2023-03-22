@@ -1,9 +1,6 @@
 package com.ykmxxi.aligong.controller.error;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.assertj.core.api.Assertions.as;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;

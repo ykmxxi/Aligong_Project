@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.ykmxxi.aligong.constant.EventStatus;
 import com.ykmxxi.aligong.constant.PlaceType;
 
+@DisplayName("View 컨트롤러 - 어드민")
 @WebMvcTest(AdminController.class)
 class AdminControllerTest {
 
@@ -33,8 +34,8 @@ class AdminControllerTest {
 		mvc.perform(
 				get("/admin/places")
 					.queryParam("placeType", PlaceType.SPORTS.name())
-					.queryParam("placeName", "치평테니스코트")
-					.queryParam("address", "광주광역시 서구 시청로 11")
+					.queryParam("placeName", "랄라배드민턴장")
+					.queryParam("address", "서울시 강남구 강남대로 1234")
 			)
 			.andExpect(status().isOk())
 			.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
@@ -64,7 +65,7 @@ class AdminControllerTest {
 				get("/admin/events")
 					.contentType(MediaType.TEXT_HTML)
 					.queryParam("placeId", "1")
-					.queryParam("placeName", "치평테니스코트")
+					.queryParam("placeName", "랄라배드민턴장")
 					.queryParam("eventName", "오후 운동")
 					.queryParam("eventStatus", EventStatus.OPENED.name())
 					.queryParam("eventStartDatetime", LocalDateTime.now().minusDays(1).toString())

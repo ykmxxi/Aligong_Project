@@ -16,14 +16,17 @@ import com.ykmxxi.aligong.exception.GeneralException;
 
 @DisplayName("에러 처리 - 에러 코드")
 class ErrorCodeTest {
+
 	@DisplayName("예외를 받으면, 예외 메시지가 포함된 메시지 출력")
 	@MethodSource
 	@ParameterizedTest(name = "[{index}] {0} ===> {1}")
 	void givenExceptionWithMessage_whenGettingMessage_thenReturnsMessage(ErrorCode sut, String expected) {
 		// Given
 		Exception e = new Exception("This is test message.");
+
 		// When
 		String actual = sut.getMessage(e);
+
 		// Then
 		assertThat(actual).isEqualTo(expected);
 	}
@@ -36,7 +39,7 @@ class ErrorCodeTest {
 			arguments(ErrorCode.VALIDATION_ERROR, "Validation error - This is test message."),
 			arguments(ErrorCode.NOT_FOUND, "Requested resource is not found - This is test message."),
 			arguments(ErrorCode.INTERNAL_ERROR, "Internal error - This is test message."),
-			arguments(ErrorCode.SPRING_INTERNAL_ERROR, "Spring internal error - This is test message."),
+			arguments(ErrorCode.SPRING_INTERNAL_ERROR, "Spring-detected internal error - This is test message."),
 			arguments(ErrorCode.DATA_ACCESS_ERROR, "Data access error - This is test message.")
 		);
 	}
@@ -46,8 +49,10 @@ class ErrorCodeTest {
 	@ParameterizedTest(name = "[{index}] \"{0}\" ===> \"{1}\"")
 	void givenMessage_whenGettingMessage_thenReturnsMessage(String input, String expected) {
 		// Given
+
 		// When
 		String actual = ErrorCode.INTERNAL_ERROR.getMessage(input);
+
 		// Then
 		assertThat(actual).isEqualTo(expected);
 	}
@@ -65,8 +70,10 @@ class ErrorCodeTest {
 	@Test
 	void givenErrorCode_whenToString_thenReturnsSimplifiedToString() {
 		// Given
+
 		// When
 		String result = ErrorCode.INTERNAL_ERROR.toString();
+
 		// Then
 		assertThat(result).isEqualTo("INTERNAL_ERROR (20000)");
 	}
